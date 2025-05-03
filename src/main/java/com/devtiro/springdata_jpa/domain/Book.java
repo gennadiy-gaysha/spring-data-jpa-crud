@@ -10,6 +10,7 @@ import lombok.*;
 @Entity
 @Table(name = "books")
 public class Book {
+    @Id
     private String isbn;
     private String title;
 

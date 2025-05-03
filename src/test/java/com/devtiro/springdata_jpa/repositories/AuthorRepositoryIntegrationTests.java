@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -14,8 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+// Clean down the context of the previous test (refresh database before every test)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthorRepositoryIntegrationTests {
-    private AuthorRepository underTest;
+    private final AuthorRepository underTest;
 
     @Autowired
     public AuthorRepositoryIntegrationTests(AuthorRepository underTest) {
@@ -26,8 +29,25 @@ public class AuthorRepositoryIntegrationTests {
     public void testThatTheAuthorCanBeVCreatedAndRecalled(){
         Author author = TestDataUtil.createTestAuthorA();
         underTest.save(author);
+
         Optional<Author> result = underTest.findById(author.getId()); // retrieves from DB
         assertThat(result).isPresent(); // checks that something was returned
         assertThat(result.get()).isEqualTo(author); // checks it matches the input
+    }
+
+    @Test
+    public void testThatMultipleAuthorsCanBeCreatedAndRecalled() {
+        Author author1 = TestDataUtil.createTestAuthorA();
+        Author author2 = TestDataUtil.createTestAuthorB();
+        Author author3 = TestDataUtil.createTestAuthorC();
+
+        underTest.save(author1);
+        underTest.save(author2);
+        underTest.save(author3);
+
+        Iterable<Author> result = underTest.findAll();
+        assertThat(result)
+                .hasSize(3)
+                .containsExactly(author1, author2, author3);
     }
 }

@@ -54,7 +54,7 @@ public class AuthorRepositoryIntegrationTests {
     @Test
     public void testThatAuthorCanBeUpdated(){
         // Create new author
-        Author authorA = TestDataUtil.createTestAuthorA();
+        Author authorA = underTest.save(TestDataUtil.createTestAuthorA());
         underTest.save(authorA);
         // Update created author
         authorA.setName("UPDATED");
@@ -67,5 +67,23 @@ public class AuthorRepositoryIntegrationTests {
         assertThat(result).isPresent();
         // Assert that the result matches the author with the updated name
         assertThat(result.get()).isEqualTo(authorA);
+    }
+
+    @Test
+    public void testThatAuthorCanBeDeleted(){
+        Author authorA = underTest.save(TestDataUtil.createTestAuthorA());
+        underTest.save(authorA);
+
+        // Verify that author exists before deletion (optional)
+        Optional<Author> beforeDelete = underTest.findById(authorA.getId());
+        assertThat(beforeDelete).isPresent();
+        assertThat(beforeDelete.get()).isEqualTo(authorA);
+
+        System.out.println(authorA.toString());
+
+        underTest.deleteById(authorA.getId());
+
+        Optional<Author> result = underTest.findById(authorA.getId());
+        assertThat(result).isEmpty();
     }
 }

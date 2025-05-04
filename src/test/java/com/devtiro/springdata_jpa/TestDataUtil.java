@@ -1,7 +1,7 @@
 package com.devtiro.springdata_jpa;
 
-import com.devtiro.springdata_jpa.domain.Author;
-import com.devtiro.springdata_jpa.domain.Book;
+import com.devtiro.springdata_jpa.domains.Author;
+import com.devtiro.springdata_jpa.domains.Book;
 
 public final class TestDataUtil {
     private TestDataUtil(){

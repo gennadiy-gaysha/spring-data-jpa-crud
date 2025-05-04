@@ -1,7 +1,11 @@
-package com.devtiro.springdata_jpa.domain;
+package com.devtiro.springdata_jpa.domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +18,8 @@ public class Book {
     private String isbn;
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private Author author;
 }
